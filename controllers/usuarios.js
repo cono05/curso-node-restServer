@@ -1,4 +1,5 @@
 const {response} = require('express');
+const Usuario = require('../models/usuario')
 
 const usuariosGet = (req, res = response) =>{
     //const query = req.query; con esta linea me quedo la query que viene en la url del get
@@ -14,14 +15,15 @@ const usuariosGet = (req, res = response) =>{
     });
 }
 
-const usuariosPost = (req, res) =>{
-    const {nombre , edad} = req.body;
+const usuariosPost = async (req, res) =>{
 
+    const body = req.body;
+    const usuario = new Usuario( body );
+    await usuario.save();
 
-    res.status(200).json({
+    res.json({
         msg: 'post API desde controlador',
-        nombre,
-        edad
+        usuario
     });
 }
 
