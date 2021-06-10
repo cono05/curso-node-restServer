@@ -43,8 +43,8 @@ const usuariosPost = async (req, res) =>{
 
 const usuariosPut = async (req, res) =>{
     const {id} = req.params; //este es .params porque viene en la linea de la url
-    const {password, google, correo, ...resto} = req.body // excluye psw, google y correo del resto del body
-
+    const {_id, password, google, correo, ...resto} = req.body // excluye psw, google y correo del resto del body
+    //el _id esta bueno sacarlo si es que viene, porque evitamos que se caiga en esa parte
     //TODO validar contra base de datos
     if(password){
         const salt = bcrypt.genSaltSync(5);
