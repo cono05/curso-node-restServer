@@ -17,8 +17,10 @@ const usuariosGet = async (req, res = response) =>{
     //solo va a contar los registros que cumplan con esa condicion. Esto nos puede servir en el obligatorio
 
     //Una manera mas performante de hacer lo mismo es usando promise.all, dado que ejecuta las dos promesas al mismo tiempo
+    //Para que se vea mejor la respuesta en postman, hacemos una desestructuracion de un arreglo donde guardamos las respuestas de las
+    //promesas
     const [total , usuarios] = await Promise.all([ //total es el resultado de la primera promesa, usuarios es el resultado de la segunda promesa
-        Usuario.count(query),
+        Usuario.countDocuments(query),
         Usuario.find(query)
             .skip(Number(desde))
             .limit(Number(limite))
@@ -74,9 +76,19 @@ const usuariosPut = async (req, res) =>{
 
 }
 
-const usuariosDelete = (req, res) =>{
+const usuariosDelete = async(req, res) =>{
+    const { id } = req.params;
+
+    //Parar borrar fisicamente. En el curso de Udemy no recomiendan el borrado fisico de un registro, dado que se pierde la integridad
+    //referencial de el elemento eliminado. Por ejemplo si ese elemento hubiese realizado operaciones que hacen referencia a su id se
+    //pierde todo.
+    //const usuarioDB = await Usuario.findByIdAndDelete(id);
+
+    //otra manera es hacer un "borrado" modificando una variable "estado" que se le asigna el valor false.
+    const usuarioDB = await Usuario.findByIdAndUpdate(id, {estado: false});
     res.json({
-        msg: 'delete API desde controlador'
+        //msg: 'delete API desde controlador'
+        usuarioDB
     });
 }
 
